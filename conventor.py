@@ -9,6 +9,8 @@ from zipfile import ZipFile
 from math import ceil, log
 import re
 import string
+import xml.dom.minidom
+
 
 class XHTMLParser(HTMLParser):
     def __init__(self):
@@ -112,7 +114,7 @@ for xhtml in xhtmls:
     full_xhtml = ''
     for xhtml_part in data_xhtml:
         if xhtml_part[0] == 'Data:':
-            full_xhtml += bolding(xhtml_part[1])
+            full_xhtml += bolding(xhtml_part[1]) + '\n'
             
 
         if len(xhtml_part) == 2 and xhtml_part[0][0] == 'Start tag:':
@@ -130,6 +132,7 @@ for xhtml in xhtmls:
             tag = f"</{xhtml_part[1]}>"
             full_xhtml += tag
     full_xhtml = first_tags + full_xhtml
+    full_xhtml = xml.dom.minidom.parseString(full_xhtml).toprettyxml()
 
     with open(xhtml, 'w', encoding='utf-8') as f:
         f.write(full_xhtml)
